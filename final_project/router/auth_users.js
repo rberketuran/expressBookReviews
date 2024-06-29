@@ -60,8 +60,9 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
         let isbn = req.params.isbn;
         let review = req.query.review;
         let username = req.session.authorization.username; 
-        
+
         books[isbn].reviews[username] = review;
+        return res.status(200).json({message: "Review successfully added"});
       } else {
         return res.status(403).json({ message: "User not authenticated" });
 
@@ -71,7 +72,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   
   
 
-  return res.status(300).json({message: "Yet to be implemented"});
+  
 });
 
 module.exports.authenticated = regd_users;
