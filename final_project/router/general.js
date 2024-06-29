@@ -22,12 +22,24 @@ public_users.get('/isbn/:isbn',function (req, res) {
   if(isbn in Object.keys(books)) {
     return res.status(200).send(books[isbn]);
   }
+  return res.status(404).send("ISBN not found.");
  });
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  let author = req.params.author;
+  author = author.replace(/-/g, ' ');
+  
+  let keys = Object.keys(books)
+  console.log(keys)
+
+  for(let key of keys){
+    if(books[key].author === author){
+      return res.status(200).send(books[key]);
+    }
+  }
+  return res.status(404).send("Author not found.");
+
 });
 
 // Get all books based on title
