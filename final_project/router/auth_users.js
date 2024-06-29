@@ -50,7 +50,27 @@ regd_users.post("/login", (req,res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-  //Write your code here
+
+  if(req.session.authorization){
+    let token = req.session.authorization['accessToken'];
+
+    jwt.verify(token, "access", (err, user) => {
+      if(!err){
+        req.user = user;
+        let isbn = req.params.isbn;
+        let review = req.query.review;
+        let username = req.session.authorization.username; 
+        
+        books[isbn].reviews[username] = review;
+      } else {
+        return res.status(403).json({ message: "User not authenticated" });
+
+      }
+    })
+  }
+  
+  
+
   return res.status(300).json({message: "Yet to be implemented"});
 });
 
