@@ -70,7 +70,31 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     })
   }
   
-  
+  regd_users.delete("/auth/review/:isbn", (req, res) => {
+    if(req.session.authorization){
+      let token = req.session.authorization['accessToken'];
+
+      jwt.verify(token, "access", (err, user) => {
+        if(!err){
+          req.user = user;
+          let isbn = parseInt(req.params.isbn);
+          let username = req.session.authorization.username;
+
+          if(isbn){
+            if(books[isbn].reviews[username]){
+              delete books[isbn].reviews[username];
+              return res.status(200).json({message: "Review successfully deleted."})
+            } else{
+              return res.status(404).json({message: "User has no review for the book."})
+            }
+          } else {
+            return res.status(404).json({message: "Please provide a correct isbn"})
+          }
+        }
+      })
+
+    }
+  })
 
   
 });
